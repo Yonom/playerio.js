@@ -14,7 +14,6 @@ message ServerEndpoint {
   optional int32 port = 2;
 }
 
-
 // SimpleConnect
 message SimpleConnectArgs {
   optional string gameId = 1;
@@ -32,7 +31,6 @@ message SimpleConnectOutput {
   optional string gameFSRedirectMap = 4;
   optional string partnerId = 5;
 }
-
 
 // SimpleRegister
 message SimpleRegisterArgs {
@@ -67,6 +65,14 @@ message SimpleRegisterError {
   optional string captchaError = 6;
 }
 
+message SimpleRecoverPasswordArgs {
+  optional string gameId = 1;
+  optional string usernameOrEmail = 2;
+}
+
+message SimpleRecoverPasswordOutput {
+
+}
 
 // CreateRoom
 message CreateRoomArgs {
@@ -81,6 +87,25 @@ message CreateRoomOutput {
   optional string roomId = 1;
 }
 
+// ListRooms
+message ListRoomsArgs {
+  optional string roomType = 1;
+  repeated KeyValuePair searchCriteria = 2;
+  optional int32 resultLimit = 3;
+  optional int32 resultOffset = 4;
+  optional bool onlyDevRooms = 5;
+}
+
+message ListRoomsOutput {
+  repeated RoomInfo rooms = 1;
+}
+
+message RoomInfo {
+  optional string id = 1;
+  optional string roomType = 2;
+  optional int32 onlineUsers = 3;
+  repeated KeyValuePair roomData = 4;
+}
 
 // JoinRoom
 message JoinRoomArgs {
@@ -93,7 +118,6 @@ message JoinRoomOutput {
   optional string joinKey = 1;
   repeated ServerEndpoint endpoints = 2;
 }
-
 
 // CreateJoinRoom
 message CreateJoinRoomArgs {
@@ -111,10 +135,24 @@ message CreateJoinRoomOutput {
   repeated ServerEndpoint endpoints = 3;
 }
 
-
 // BigDB
+
+enum valueType {
+  STRING = 0;
+  INT = 1;
+  UINT = 2;
+  LONG = 3;
+  BOOL = 4;
+  FLOAT = 5;
+  DOUBLe = 6;
+  BYTEARRAY = 7;
+  DATETIME = 8;
+  ARRAY = 9;
+  OBJ = 10;
+}
+
 message ValueObject {
-  optional enum valueType = 1;
+  optional valueType valueType = 1;
   optional string string = 2;
   optional int32 int32 = 3;
   optional uint32 uInt = 4;
@@ -145,21 +183,61 @@ message BigDBObject {
   optional uint32 creator = 4;
 }
 
+message BigDBObjectId {
+  optional string table = 1;
+  repeated string keys = 2;
+}
+
 message LoadMyPlayerObjectArgs {
-  
+
 }
 
 message LoadMyPlayerObjectOutput {
-    optional BigDBObject playerObject = 1;
+  optional BigDBObject playerObject = 1;
 }
 
-
-// PlayerInsight
-message PlayerInsightState {
-  optional int32 playersOnline = 1;
-  repeated KeyValuePair segments = 2;
+message LoadIndexRangeArgs {
+  optional string table = 1;
+  optional string index = 2;
+  repeated ValueObject startIndexValue = 3;
+  repeated ValueObject stopIndexValue = 4;
+  optional int32 limit = 5;
 }
 
+message LoadIndexRangeOutput {
+  repeated BigDBObject objects = 1;
+}
+
+message LoadObjectsArgs {
+  repeated BigDBObjectId objectIds = 1;
+}
+
+message LoadObjectsOutput {
+  repeated BigDBObject objects = 1;
+}
+
+// PayVault
+message PayVaultRefreshArgs {
+  optional string lastVersion = 1;
+  optional string targetUserId = 2;
+}
+
+message PayVaultRefreshOutput {
+  optional PayVaultContents valueContents = 1;
+}
+
+message PayVaultContents {
+  optional string version = 1;
+  optional int32 coins = 2;
+  repeated PayVaultItem items = 3;
+}
+
+message PayVaultItem {
+  optional string id = 1;
+  optional string itemKey = 2;
+  optional int64 purchaseDate = 3;
+  repeated ObjectProperty properties = 4;
+}
 
 // Generic exception
 message PlayerIOError {

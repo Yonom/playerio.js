@@ -1,0 +1,9 @@
+{
+  "name": "playerio.js-browser-example",
+  "dependencies": {
+    "express": "^4.14.0",
+    "http-browserify": "^1.7.0",
+    "http-proxy": "^1.14.0",
+    "net-browserify": "^0.2.3"
+  }
+}

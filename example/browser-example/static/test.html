@@ -1,0 +1,34 @@
+<html>
+<head>
+
+</head>
+<body>
+<script src="playerio.js"></script>
+<script>
+  PlayerIO.QuickConnect.simpleConnect('everybody-edits-su9rn58o40itdbnw69plyw', 'guest1@tbp.com', 'guest', null, function (client) {
+    client.bigDB.loadMyPlayerObject(function (playerObject) {
+      console.log('BigDB - Current PlayerObject:');
+      console.log(playerObject);
+    }, function (error) {
+      console.log(error);
+    });
+
+    client.multiplayer.createJoinRoom('PWAJwkxnxta0I', 'Everybodyedits201', true, null, null, function (connection) {
+        connection.on('message', function (m) {
+          if (m.type === 'init') {
+            // Allow custom chat messages to be sent
+            console.log('[INFO] Now you can start chatting.');
+          }
+        });
+
+        connection.send(new PlayerIO.Message('init'));
+
+      }, function (error) {
+        console.log(error);
+      }
+    );
+  });
+
+</script>
+</body>
+</html>
